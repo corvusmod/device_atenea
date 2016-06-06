@@ -1,12 +1,12 @@
-----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582).---
+----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582&MT6572).---
 
-This is a device tree for Xiaomi Redmi_1s_TD(HM2014011) which is based on MT6582 SoC. Powered by ferhung.
+This is a device tree for explay atom which is based on MT6572 SoC. Powered by vitek999.
 # Build
 
 * init
   Sync CyanogenMod source:
 
-        # repo init -u git://github.com/ferhung/android.git -b cm-12.1
+        # repo init -u git://github.com/ArgonOS/android.git -b cm-12.1
         
         # repo sync
 
@@ -14,7 +14,7 @@ This is a device tree for Xiaomi Redmi_1s_TD(HM2014011) which is based on MT6582
         
         # source build/envsetup.sh
 
-        # brunch cm_HM2014011-userdebug
+        # brunch cm_atom-userdebug
 
 # Limitations
 

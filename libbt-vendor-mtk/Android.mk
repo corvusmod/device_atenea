@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+ifneq ( ,$(filter cm_atenea,$(TARGET_PRODUCT)))
 ifneq ($(BOARD_HAVE_BLUETOOTH_MTK),)
 
 LOCAL_PATH := $(call my-dir)
@@ -37,4 +37,5 @@ LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
 
 include $(BUILD_SHARED_LIBRARY)
 
+endif
 endif

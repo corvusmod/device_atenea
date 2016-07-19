@@ -133,4 +133,4 @@ WIFI_DRIVER_FW_PATH_AP:=AP
 WIFI_DRIVER_FW_PATH_P2P:=P2P
 
 # GPS
-TARGET_SPECIFIC_HEADER_PATH := device/hexxa/atenea/include
+#TARGET_SPECIFIC_HEADER_PATH := device/hexxa/atenea/include

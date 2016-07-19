@@ -1,1 +1,3 @@
-add_lunch_combo cm_atom-userdebug
+add_lunch_combo cm_atenea-eng
+add_lunch_combo cm_atenea-user
+add_lunch_combo cm_atenea-userdebug

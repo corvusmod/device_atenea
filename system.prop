@@ -1,5 +1,5 @@
 #
-# system.prop for atom
+# system.prop for atenea
 #
 service.adb.root=1
 ro.sf.lcd_density=210

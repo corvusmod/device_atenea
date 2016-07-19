@@ -7,9 +7,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 PRODUCT_DEX_PREOPT_DEFAULT_FLAGS := --compiler-filter=interpret-only
 $(call add-product-dex-preopt-module-config,services,--compiler-filter=space)
 
-$(call inherit-product-if-exists, vendor/explay/atom/atom-vendor.mk)
+$(call inherit-product-if-exists, vendor/hexxa/atenea/atenea-vendor.mk)
 
-LOCAL_PATH := device/explay/atom
+LOCAL_PATH := device/hexxa/atenea
 
 PRODUCT_CHARACTERISTICS := default
 
@@ -47,11 +47,11 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/vendor/etc/audio_policy.conf
-    
+
 # Bluetooth
 PRODUCT_PACKAGES += \
     libbt-vendor
-    
+
 # Keylayout
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/mtk-kpd.kl:system/usr/keylayout/mtk-kpd.kl
@@ -123,8 +123,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	persist.service.debuggable=1 \
 	persist.mtk.wcn.combo.chipid=-1
 
-PRODUCT_NAME := full_atom
-PRODUCT_DEVICE := atom
+PRODUCT_NAME := full_atenea
+PRODUCT_DEVICE := atenea
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 800

@@ -1,20 +1,20 @@
 ----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582&MT6572).---
 
-This is a device tree for explay atom which is based on MT6572 SoC. Powered by vitek999.
+This is a device tree for Hexxa Atenea which is based on MT6572 SoC. Powered by vitek999.
 # Build
 
 * init
   Sync CyanogenMod source:
 
         # repo init -u git://github.com/ArgonOS/android.git -b cm-12.1
-        
+
         # repo sync
 
 * full build
-        
+
         # source build/envsetup.sh
 
-        # brunch cm_atom-userdebug
+        # brunch cm_atenea-userdebug
 
 # Limitations
 
@@ -27,7 +27,7 @@ Services requires root:
   * mediaserver depends on /data/nvram folder access, unable to do voice calls from 'media' user (default user 'media')
 
 # In China, we must skip to get 204 from Google server.
-  * Change of Android 5.1 source to skip network validation in some environment like China can't connect to http://clients3.google.com/generate_204. 
+  * Change of Android 5.1 source to skip network validation in some environment like China can't connect to http://clients3.google.com/generate_204.
 
-  To see: 
+  To see:
     [Skip_network_validation](http://github.com/ferhung/Skip_network_validation)

@@ -27,15 +27,15 @@ $(INSTALLED_KERNEL_TARGET).mtk: $(INSTALLED_KERNEL_TARGET).mtk.header
 	$(call pretty,"Adding MTK header to kernel.")
 #	cat $(INSTALLED_KERNEL_TARGET) > $@
 	cat $(INSTALLED_KERNEL_TARGET).mtk.header $(INSTALLED_KERNEL_TARGET) > $@
-	
+
 INSTALLED_RAMDISK_TARGET := $(BUILT_RAMDISK_TARGET)
 $(INSTALLED_RAMDISK_TARGET): $(MKBOOTFS) $(INTERNAL_RAMDISK_FILES) | $(MINIGZIP)
 	$(call pretty,"Target ram disk: $@")
-	cmp -s device/explay/atom/rootdir/custom_init out/target/product/atom/root/init; \
+	cmp -s device/hexxa/atenea/rootdir/custom_init out/target/product/atenea/root/init; \
 	RETVAL=$$?; \
 	if [ $$RETVAL -eq 1 ]; then \
-		mv out/target/product/atom/root/init out/target/product/atom/root/init2; \
-		cp device/explay/atom/rootdir/custom_init out/target/product/atom/root/init; \
+		mv out/target/product/atenea/root/init out/target/product/atenea/root/init2; \
+		cp device/hexxa/atenea/rootdir/custom_init out/target/product/atenea/root/init; \
 	fi
 	$(hide) $(MKBOOTFS) $(TARGET_ROOT_OUT) | $(MINIGZIP) > $@
 

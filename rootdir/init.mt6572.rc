@@ -28,6 +28,10 @@ on init
     chown system graphics /dev/ion
     chmod 0644 /dev/ion
 
+    # change lk_env permission
+    chown root system /proc/lk_env
+    chmod 0660 /proc/lk_env
+
     # TODO: fix system apps run with unknown user resume 0660
     chmod 0666 /dev/mali
     chown system graphics /dev/mali
@@ -69,6 +73,13 @@ on init
     
     chown system media /dev/uibc
     chmod 0660 /dev/uibc
+
+    #/dev/ttyMT2 for Connectivity BT/FM/GPS usage
+    chmod 0660 /dev/ttyMT2
+    chown system system /dev/ttyMT2
+
+    chmod 0660 /dev/ttyMT1
+    chown system system /dev/ttyMT1
 
     # GPS
     chmod 0666 /dev/gps
@@ -213,7 +224,22 @@ on init
     chown system /sys/class/input/input5/wake
     chown system /sys/class/input/input3/enable
     chown system /sys/class/input/input3/wake
-    chown system /sys/class/input/input4/offsets    
+    chown system /sys/class/input/input4/offsets  
+    chown system /sys/class/input/input4/enable
+    chown system /sys/class/input/input4/delay
+    chown system /sys/class/input/input4/wake
+    chown system /sys/class/input/input2/enable
+    chown system /sys/class/input/input2/wake
+    chown system /sys/class/input/input3/offsets    
+     #a800 msensor relative input devices setting
+    #orientation
+    chown system /sys/class/input/input6/enable
+    chown system /sys/class/input/input6/delay
+    chown system /sys/class/input/input6/wake
+    #geomagnetic raw
+    chown system /sys/class/input/input5/offsets
+    chown system /sys/class/input/input5/dynamic_matrix
+    #end  
     chown system /sys/devices/platform/msensor/driver/cpsopmode
     chown system /sys/devices/platform/msensor/driver/cpsreptxy
     chown system /sys/devices/platform/msensor/driver/cpsreptz
@@ -276,6 +302,7 @@ on post-fs-data
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
+    chown wifi wifi /data/misc/wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
 
@@ -353,7 +380,17 @@ on fs
     mount_all /fstab.mt6572
     setprop ro.crypto.fuse_sdcard true
 
+# change partition permissions
+    exec /system/bin/chmod 0660 /dev/proinfo
+    exec /system/bin/chown root:system /dev/proinfo
+    exec /system/bin/chmod 0660 /dev/nvram
+    exec /system/bin/chown root:system /dev/nvram
+    exec /system/bin/chmod 0660 /dev/misc
+    exec /system/bin/chown root:system /dev/misc
     write /proc/bootprof "INIT:NAND:Mount_END"
+
+    mkdir /data/agps_supl 0771 gps system
+    mkdir /data/gps_mnl 0771 gps system
 
 on property:wlan.driver.status=ok
 	write /dev/wmtWifi "1"
@@ -430,10 +467,11 @@ service drvbd /system/bin/drvbd
 service nvram_daemon /system/bin/nvram_daemon
     class main
     user root
-    group nvram root
+    group nvram root system
     oneshot
 
 service NvRAMAgent /system/bin/nvram_agent_binder
+     class main
      user system
      group system nvram
 
@@ -582,14 +620,27 @@ service agpsd /system/bin/mtk_agpsd
     socket agpsd stream 660 gps system
     socket agpsd2 stream 660 gps system
     socket agpsd3 stream 660 gps system
-    user gps
+    user root
     group gps ccci inet sdcard_r sdcard_rw misc
+    oneshot
 
 service mnld /system/xbin/mnld
-    user gps
-    group nvram gps inet misc sdcard_rw sdcard_r media_rw
+    user root
+    group nvram gps inet misc sdcard_rw sdcard_r media_rw system
     socket mnld stream 660 gps system
-    disabled
+    oneshot
+
+service wifi2agps /system/bin/wifi2agps
+    class main
+    user root
+    group gps inet
+    oneshot
+
+service BGW /system/xbin/BGW
+    user root
+    group gps system radio
+    class main
+    oneshot
 
 # healthd
 service charger /sbin/healthd -c
@@ -597,13 +648,13 @@ service charger /sbin/healthd -c
     seclabel u:r:healthd:s0
 
 # virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
-    class late_start
-
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
-    class late_start
-    disabled
-
-service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbotg /storage/usbotg
-     class late_start
-     disabled
+#service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
+#    class late_start
+#
+#service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+#    class late_start
+#    disabled
+#
+#service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbotg /storage/usbotg
+#     class late_start
+#     disabled

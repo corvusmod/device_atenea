@@ -1,20 +1,20 @@
-----Thanks for fire855 & superdragonpt, who are contributing to the working CyanogenMod of MTK hardware(MT6592&MT6582&MT6572).---
+----omnirom for MTK hardware.---
+# Omnirom
 
-This is a device tree for Hexxa Atenea which is based on MT6572 SoC. Powered by vitek999.
+This is a device tree for huawei g750t01 which is based on MT6592 SoC. Powered by ferhung.
 # Build
 
 * init
-  Sync CyanogenMod source:
+  Sync Omnirom source:
 
-        # repo init -u git://github.com/ArgonOS/android.git -b cm-12.1
-
+        # repo init -u git://github.com/omnirom-mtk/android-mtk.git -b android-6.0        
         # repo sync
 
 * full build
 
         # source build/envsetup.sh
 
-        # brunch cm_atenea-userdebug
+        # brunch omni_g750t01-userdebug
 
 # Limitations
 

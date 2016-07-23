@@ -11,13 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-ifneq ( ,$(filter cm_atenea,$(TARGET_PRODUCT)))
+ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),mt6572)
+
 ifneq ($(BOARD_HAVE_BLUETOOTH_MTK),)
 
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_C_INCLUDES := external/bluetooth/bluedroid/hci/include
+LOCAL_C_INCLUDES :=  \
+	system/bt/hci/include  \
+	$(LOCAL_PATH)
 
 LOCAL_CFLAGS := -g -c -W -Wall -O2 -D_POSIX_SOURCE
 

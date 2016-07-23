@@ -18,7 +18,7 @@ TARGET_CPU_MEMCPY_OPT_DISABLE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # Enable dex-preoptimization
-WITH_DEXPREOPT := true
+WITH_DEXPREOPT := false
 DONT_DEXPREOPT_PREBUILTS := true
 
 # Bootloader
@@ -28,7 +28,10 @@ TARGET_USERIMAGES_USE_EXT4:=true
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := atenea,mediatek
+TARGET_OTA_ASSERT_DEVICE := atenea,mediatek,k8,w812a
+
+# AudioFX
+TARGET_IGNORE_VENDOR_AUDIO_EFFECTS_CONF := true
 
 # MTK HARDWARE
 BOARD_HAS_MTK_HARDWARE := true
@@ -36,6 +39,7 @@ MTK_HARDWARE := true
 BOARD_USES_LEGACY_MTK_AV_BLOB := true
 COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
 COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
+BLOCK_BASED_OTA :=false
 
 # RIL
 BOARD_RIL_CLASS := ../../../device/hexxa/atenea/ril/
@@ -46,8 +50,10 @@ BOARD_CONNECTIVITY_MODULE := conn_soc
 # Partitions & Image
 BOARD_BOOTIMAGE_PARTITION_SIZE := 10485760
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 10485760
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 5452595200
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 2452595200
 BOARD_SYSTEMIMAGE_PARTITION_SIZE:=836600000
+BOARD_CACHEIMAGE_PARTITION_SIZE := 134217728
+BOARD_CACHEIMAGE_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
 
@@ -61,7 +67,7 @@ COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 
 # Kernel
-BOARD_KERNEL_CMDLINE :=
+BOARD_KERNEL_CMDLINE := androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 TARGET_PREBUILT_KERNEL := device/hexxa/atenea/kernel
@@ -74,9 +80,10 @@ TARGET_RECOVERY_FSTAB := device/hexxa/atenea/rootdir/recovery.fstab
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
 # TWRP
-DEVICE_RESOLUTION := 320x320
-TARGET_SCREEN_HEIGHT := 320
-TARGET_SCREEN_WIDTH := 320
+DEVICE_RESOLUTION := 360x360
+TARGET_SCREEN_HEIGHT := 360
+TARGET_SCREEN_WIDTH := 360
+TW_THEME := portrait_hdpi
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 TW_NO_REBOOT_BOOTLOADER := true
 TW_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
@@ -91,6 +98,8 @@ TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p6"
 TW_CRYPTO_MNT_POINT := "/data"
 TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered"
 TW_EXCLUDE_SUPERSU := true
+TW_EXTRA_LANGUAGES := true
+TW_BUILD_ZH_CN_SUPPORT := false
 TW_INCLUDE_FB2PNG := true
 TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone1/temp
 
@@ -105,22 +114,23 @@ HEALTHD_ENABLE_TRICOLOR_LED := true
 RED_LED_PATH := /sys/class/leds/red/brightness
 GREEN_LED_PATH := /sys/class/leds/green/brightness
 BLUE_LED_PATH := /sys/class/leds/blue/brightness
+# Next lines, fix charging-mod in power off. It needs to modify the init.cpp, too.
+BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/BOOT/BOOT/boot/boot_mode
+BOARD_CHARGER_DISABLE_INIT_BLANK := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
+BOARD_CHARGER_SHOW_PERCENTAGE := true
+BOARD_HAL_STATIC_LIBRARIES := libhealthd.mtk
 
 # EGL settings
 BOARD_EGL_CFG := device/hexxa/atenea/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_EGL_WORKAROUND_BUG_10194508 := true
+BOARD_EGL_NEEDS_HANDLE_VALUE := true
+BOARD_EGL_NEEDS_FNW := true
+TARGET_REQUIRES_SYNCHRONOUS_SETSURFACE := true
 
 # Selinux
-BOARD_SEPOLICY_DIRS := \
-       device/hexxa/atenea/sepolicy
-
-BOARD_SEPOLICY_UNION := \
-       device.te \
-       app.te \
-       netd.te \
-       system.te \
-       file_contexts
+BOARD_SEPOLICY_DIRS += device/hexxa/atenea/sepolicy
 
 # WIFI
 WPA_SUPPLICANT_VERSION := VER_0_8_X
@@ -134,10 +144,23 @@ WIFI_DRIVER_FW_PATH_AP:=AP
 WIFI_DRIVER_FW_PATH_P2P:=P2P
 
 # GPS
-#TARGET_SPECIFIC_HEADER_PATH := device/hexxa/atenea/include
+TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
 # mkbootimg header, which is used in LK
 BOARD_KERNEL_BASE = 0x10000000
 BOARD_KERNEL_OFFSET = 0x00008000
 BOARD_RAMDISK_OFFSET = 0x01000000
 BOARD_TAGS_OFFSET = 0x00000100
+
+# Disable memcpy opt (for audio libraries)
+TARGET_CPU_MEMCPY_OPT_DISABLE := true
+
+# Enable Minikin text layout engine (will be the default soon)
+USE_MINIKIN := true
+
+# Sepolicy hack for old kernel, our mt6582 & mt6592 version is 26.
+POLICYVERS := 26
+
+# Hack for build
+$(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
+

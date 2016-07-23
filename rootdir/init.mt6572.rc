@@ -2,8 +2,12 @@ import init.mt6572.usb.rc
 import init.modem.rc
 import init.mt6572.power.rc
 
+on early-init
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+    setprop ro.mtk.hardware mt6572
+
 on init
-    export LD_PRELOAD /system/lib/libxlog.so
+    export LD_PRELOAD "/system/lib/libxlog.so /system/lib/libmt6572.so"
 
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root

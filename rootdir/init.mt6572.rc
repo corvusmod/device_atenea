@@ -7,6 +7,9 @@ on early-init
     setprop ro.mtk.hardware mt6572
 
 on init
+
+    loglevel 8
+
     export LD_PRELOAD "/system/lib/libxlog.so /system/lib/libmt6572.so"
 
     mkdir /mnt/shell/emulated 0700 shell shell
@@ -44,8 +47,9 @@ on init
     chown system graphics /dev/graphics/fb0
 
     chmod 0660 /dev/mtkfb_vsync
-    chown system graphics /dev/mtkfb_vsync
+    chown system graphics /dev/mtkfb_vsyn
 
+    mknod /dev/stpwmt c 190 0;
     chmod 0660 /dev/sw_sync
     chown system graphics /dev/sw_sync
 

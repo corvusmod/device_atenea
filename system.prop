@@ -62,7 +62,8 @@ ro.sys.usb.mtp.whql.enable=0
 # Power off opt in IPO
 sys.ipo.pwrdncap=2
 
-ro.sys.usb.storage.type=mtp,adb
+#ro.sys.usb.storage.type=mtp,adb
+ro.sys.usb.storage.type=adb
 
 # USB BICR function
 ro.sys.usb.bicr=yes
@@ -86,3 +87,5 @@ persist.sys.strictmode.visual=0
 persist.sys.strictmode.disable=1
 
 ro.mount.fs=EXT4
+
+debug.sf.nobootanimation=1

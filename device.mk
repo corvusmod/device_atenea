@@ -52,6 +52,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
+
+#Custom bootanimation
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/bootanimation.zip:system/media/bootanimation.zip
     
 # Bluetooth
 PRODUCT_PACKAGES += \
@@ -75,7 +79,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/fstab.mt6572:root/fstab.mt6572 \
     $(LOCAL_PATH)/rootdir/init.recovery.mt6572.rc:root/init.recovery.mt6572.rc \
     $(LOCAL_PATH)/rootdir/init.mt6572.rc:root/init.mt6572.rc \
-    $(LOCAL_PATH)/rootdir/init.rc:root/init.rc \
     $(LOCAL_PATH)/rootdir/init.modem.rc:root/init.modem.rc \
     $(LOCAL_PATH)/rootdir/ueventd.mt6572.rc:root/ueventd.mt6572.rc \
     $(LOCAL_PATH)/rootdir/init.mt6572.usb.rc:root/init.mt6572.usb.rc \
@@ -145,10 +148,13 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	ro.telephony.sim.count=2 \
 	ro.allow.mock.location=0 \
 	ro.debuggable=1 \
-	persist.sys.usb.config=mtp,adb \
 	persist.service.adb.enable=1 \
 	persist.service.debuggable=1 \
 	persist.mtk.wcn.combo.chipid=-1
+
+#Enable mtp once debugging is finished
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.sys.usb.config=adb 
 
 PRODUCT_NAME := full_atenea
 PRODUCT_DEVICE := atenea

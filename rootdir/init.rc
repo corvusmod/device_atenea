@@ -6,7 +6,7 @@
 
 import /init.environ.rc
 import /init.usb.rc
-import /init.mt6572.rc
+import /init.${ro.hardware}.rc
 import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
@@ -64,6 +64,7 @@ on init
     mkdir /mnt/shell 0700 shell shell
     mkdir /mnt/media_rw 0700 media_rw media_rw
     mkdir /storage 0751 root sdcard_r
+    mkdir /storage/emulated 0755 root sdcard_r
     mkdir /mnt 0755 root system
     mount tmpfs tmpfs /mnt mode=0755,uid=0,gid=1000
     restorecon_recursive /mnt
@@ -192,6 +193,12 @@ on init
     chmod 0664 /dev/cpuset/system-background/tasks
     chmod 0664 /dev/cpuset/tasks
 
+# Change MMP driver permission
+    chmod 0644 /dev/mmp
+
+# change lk_env permission
+    chown root system /proc/lk_env
+    chmod 0660 /proc/lk_env
 
     # qtaguid will limit access to specific data based on group memberships.
     #   net_bw_acct grants impersonation of socket owners.
@@ -780,6 +787,64 @@ service perfprofd /system/xbin/perfprofd
     oneshot
     writepid /dev/cpuset/system-background/tasks
 
+#
+#sensor service (begin)
+#
+
+service msensord /system/bin/msensord
+    oneshot
+
+service ami304d /system/bin/ami304d
+    user system
+    group system
+    disabled
+    oneshot
+
+service memsicd /system/bin/memsicd
+     disabled
+     oneshot
+    user system
+    group system
+
+service akmd8975 /system/bin/akmd8975
+    disabled
+    user system
+    group system
+
+service akmd8963 /system/bin/akmd8963
+    disabled
+    user system
+    group system
+
+service bmm050d /system/bin/bmm050d
+    disabled
+    user system
+    group system
+
+service mc6420d /system/bin/mc6420d
+    disabled
+    user system
+    group system
+
+service orientationd /system/bin/orientationd
+    disabled
+    user system
+    group system input
+service AcdApiDaemon /system/bin/AcdApiDaemon
+    disabled
+    oneshot
+    user system
+    group system
+
+service geomagneticd /system/bin/geomagneticd
+    disabled
+    user system
+    group system input
+#
+#sensor service (end)
+#
+
+
 on property:persist.logd.logpersistd=logcatd
     # all exec/services are called with umask(077), so no gain beyond 0700
     mkdir /data/misc/logd 0700 logd log
@@ -794,3 +859,12 @@ service logcatd /system/bin/logcat -b all -v threadtime -v usec -v printable -D 
     user logd
     group log
     writepid /dev/cpuset/system-background/tasks
+
+# SenHub scripts
+    service sensorsinit /system/bin/w812a_sensorhub_init.sh
+    class main
+    oneshot	
+
+service sn /system/bin/sn
+    user root
+    oneshot

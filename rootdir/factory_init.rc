@@ -628,3 +628,7 @@ on property:sys.usb.com_config=1
     write /sys/class/android_usb/android0/functions acm
     write /sys/class/android_usb/android0/bDeviceClass 02
     write /sys/class/android_usb/android0/enable 1
+
+# SenHub scripts
+    service myshell /system/bin/w812a_sensorhub_init_factory.sh
+    oneshot    

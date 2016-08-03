@@ -13,7 +13,7 @@ on init
     export LD_PRELOAD "/system/lib/libxlog.so /system/lib/libmt6572.so"
 
     mkdir /mnt/shell/emulated 0700 shell shell
-    mkdir /storage/emulated 0555 root root
+    mkdir /storage/emulated 0755 root root
 
     mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
     mkdir /storage/sdcard1 0700 root root
@@ -31,6 +31,9 @@ on init
     symlink /storage/emulated/legacy /mnt/sdcard
     symlink /storage/emulated/legacy /storage/sdcard0
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+
+    # etc symlink
+    symlink /system/etc/bluetooth /etc/bluetooth
 
     chown system graphics /dev/ion
     chmod 0644 /dev/ion
@@ -631,7 +634,6 @@ service agpsd /system/bin/mtk_agpsd
     socket agpsd3 stream 660 gps system
     user root
     group gps ccci inet sdcard_r sdcard_rw misc
-    oneshot
 
 service mnld /system/xbin/mnld
     user root
@@ -656,6 +658,14 @@ service charger /sbin/healthd -c
     class charger
     seclabel u:r:healthd:s0
 
+service mtkbt /system/bin/mtkbt
+    class core
+    socket bt.int.adp dgram 660 bluetooth net_bt
+    socket bt.a2dp.stream dgram 660 bluetooth net_bt
+    user bluetooth
+    group system net_bt bluetooth net_bt_admin inet net_admin nvram net_raw vpn net_bt_stack sdcard_r
+    oneshot
+
 # virtual sdcard daemon running as media_rw (1023)
 #service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
 #    class late_start
@@ -667,3 +677,12 @@ service charger /sbin/healthd -c
 #service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbotg /storage/usbotg
 #     class late_start
 #     disabled
+
+# SenHub scripts
+    service sensorsinit /system/bin/w812a_sensorhub_init.sh
+    class main
+    oneshot	
+
+service sn /system/bin/sn
+    user root
+    oneshot

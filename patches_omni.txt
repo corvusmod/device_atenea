@@ -14,6 +14,19 @@ index de74618..7f55136 100644
  
  ifeq ($(TARGET_KERNEL_MODULES),)
 
+project bionic/
+diff --git a/linker/linker.cpp b/linker/linker.cpp
+index 7909241..19f461c 100644
+--- a/linker/linker.cpp
++++ b/linker/linker.cpp
+@@ -3260,7 +3260,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
+   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
+   if (elf_hdr->e_type != ET_DYN) {
+     __libc_format_fd(2, "error: only position independent executables (PIE) are supported.\n");
+-    exit(EXIT_FAILURE);
+   }
+ #endif
+
 project device/huawei/g750t01/
 diff --git a/wpa_supplicant/Android.mk b/wpa_supplicant/Android.mk
 index d312412..0eed00c 100644

@@ -1,0 +1,77 @@
+diff --git a/init/Android.mk b/init/Android.mk
+index a4c9819..0722c2c 100755
+--- a/init/Android.mk
++++ b/init/Android.mk
+@@ -58,6 +58,14 @@ ifeq ($(TARGET_BOARD_PLATFORM),mt6592)
+ LOCAL_CFLAGS += -DMTK_MT6592
+ endif
+ 
++ifeq ($(TARGET_BOARD_PLATFORM),mt6572)
++LOCAL_CFLAGS += -DMTK_MT6572
++endif
++
++ifeq ($(TARGET_BOARD_PLATFORM),mt6753)
++LOCAL_CFLAGS += -DMTK_MT6753
++endif
++
+ SYSTEM_CORE_INIT_DEFINES := BOARD_CHARGING_MODE_BOOTING_LPM
+ 
+ $(foreach system_core_init_define,$(SYSTEM_CORE_INIT_DEFINES), \
+diff --git a/init/init.cpp b/init/init.cpp
+index 569e2ec..4198274 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -845,6 +845,12 @@ static void export_kernel_boot_props() {
+         { "ro.boot.mode",       "ro.bootmode",   "unknown", },
+         { "ro.boot.baseband",   "ro.baseband",   "unknown", },
+         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
++#ifdef MTK_MT6572     
++        { "ro.boot.hardware",   "ro.hardware",   "mt6572", },
++#endif
++#ifdef MTK_MT6753     
++        { "ro.boot.hardware",   "ro.hardware",   "mt6753", },
++#endif
+ #ifdef MTK_MT6582     
+         { "ro.boot.hardware",   "ro.hardware",   "mt6582", },
+ #endif
+diff --git a/mkbootimg/Android.mk b/mkbootimg/Android.mk
+index dd42459..3cde4a6 100644
+--- a/mkbootimg/Android.mk
++++ b/mkbootimg/Android.mk
+@@ -25,6 +25,7 @@ LOCAL_MODULE_CLASS := UTILITY_EXECUTABLES
+ LOCAL_UNSTRIPPED_PATH := $(PRODUCT_OUT)/symbols/utilities
+ LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities
+ LOCAL_FORCE_STATIC_EXECUTABLE := true
++LOCAL_PACK_MODULE_RELOCATIONS := false
+ include $(BUILD_EXECUTABLE)
+ 
+ include $(CLEAR_VARS)
+@@ -37,6 +38,7 @@ LOCAL_MODULE_CLASS := UTILITY_EXECUTABLES
+ LOCAL_UNSTRIPPED_PATH := $(PRODUCT_OUT)/symbols/utilities
+ LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities
+ LOCAL_FORCE_STATIC_EXECUTABLE := true
++LOCAL_PACK_MODULE_RELOCATIONS := false
+ include $(BUILD_EXECUTABLE)
+ 
+ $(call dist-for-goals,dist_files,$(LOCAL_BUILT_MODULE))
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 0194770..73030b1 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -600,7 +600,6 @@ on property:ro.debuggable=1
+ service adbd /sbin/adbd --root_seclabel=u:r:su:s0
+     class core
+     socket adbd stream 660 system system
+-    enabled
+     seclabel u:r:adbd:s0
+ 
+ # adbd on at boot in emulator
+@@ -669,7 +668,7 @@ service drm /system/bin/drmserver
+ service media /system/bin/mediaserver
+     class main
+     user root
+-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm qcom_diag media sdcard_r system net_bt_stack nvram ccci
++    group audio inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm media sdcard_r system net_bt_stack nvram ccci
+     ioprio rt 4
+ 
+ # One shot invocation to deal with encrypted volume.

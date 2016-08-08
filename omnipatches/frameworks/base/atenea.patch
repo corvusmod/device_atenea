@@ -1,0 +1,49 @@
+diff --git a/core/res/res/values/custom_config.xml b/core/res/res/values/custom_config.xml
+index 02c5bf5..21de43c 100644
+--- a/core/res/res/values/custom_config.xml
++++ b/core/res/res/values/custom_config.xml
+@@ -82,8 +82,4 @@
+          policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+     -->
+     <integer name="config_longPressOnMenuBehavior">0</integer>
+-
+-    <!-- Older rotation sensors are not setting event.timestamp correctly. Setting to
+-         true will use SystemClock.elapsedRealtimeNanos() to set timestamp. -->
+-    <bool name="config_useSystemClockforRotationSensor">false</bool>
+ </resources>
+diff --git a/packages/SystemUI/src/com/android/systemui/doze/ProximitySensorManager.java b/packages/SystemUI/src/com/android/systemui/doze/ProximitySensorManager.java
+index 4cdc999..190681f 100644
+--- a/packages/SystemUI/src/com/android/systemui/doze/ProximitySensorManager.java
++++ b/packages/SystemUI/src/com/android/systemui/doze/ProximitySensorManager.java
+@@ -22,8 +22,6 @@ import android.hardware.SensorEvent;
+ import android.hardware.SensorEventListener;
+ import android.hardware.SensorManager;
+ 
+-import javax.annotation.concurrent.GuardedBy;
+-
+ /**
+  * Manages the proximity sensor and notifies a listener when enabled.
+  */
+@@ -79,12 +77,12 @@ public class ProximitySensorManager {
+          * <p>
+          * Before registering and after unregistering we are always in the {@link State#FAR} state.
+          */
+-        @GuardedBy("this") private State mLastState;
++        private State mLastState;
+         /**
+          * If this flag is set to true, we are waiting to reach the {@link State#FAR} state and
+          * should notify the listener and unregister when that happens.
+          */
+-        @GuardedBy("this") private boolean mWaitingForFarState;
++        private boolean mWaitingForFarState;
+ 
+         public ProximitySensorEventListener(SensorManager sensorManager, Sensor proximitySensor,
+                 ProximityListener listener) {
+@@ -175,7 +173,6 @@ public class ProximitySensorManager {
+             }
+         }
+ 
+-        @GuardedBy("this")
+         private void unregisterWithoutNotification() {
+             mSensorManager.unregisterListener(this);
+             mWaitingForFarState = false;

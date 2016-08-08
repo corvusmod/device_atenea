@@ -1,0 +1,11 @@
+diff --git a/isolated_app.te b/isolated_app.te
+index ef68986..c02ef68 100644
+--- a/isolated_app.te
++++ b/isolated_app.te
+@@ -33,6 +33,3 @@ neverallow isolated_app {
+     -activity_service
+     -display_service
+ }:service_manager find;
+-
+-# Isolated apps shouldn't be able to access the driver directly.
+-neverallow isolated_app gpu_device:chr_file { rw_file_perms execute };
